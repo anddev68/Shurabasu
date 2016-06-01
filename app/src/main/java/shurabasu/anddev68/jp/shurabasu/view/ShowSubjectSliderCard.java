@@ -5,32 +5,29 @@ import android.support.v7.widget.CardView;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.LinearLayout;
 
 import shurabasu.anddev68.jp.shurabasu.R;
 
 /**
- * Created by kano on 2016/06/01.
+ * Created by Administrator on 2016/06/01.
  */
-public class ShowSubjectPointCard extends CardView {
-
-    public ShowSubjectPointCard(Context context) {
+public class ShowSubjectSliderCard extends CardView{
+    public ShowSubjectSliderCard(Context context) {
         super(context);
         init(context);
     }
 
-    public ShowSubjectPointCard(Context context, AttributeSet attrs) {
+    public ShowSubjectSliderCard(Context context, AttributeSet attrs) {
         super(context, attrs);
         init(context);
     }
 
-    public ShowSubjectPointCard(Context context, AttributeSet attrs, int defStyleAttr) {
+    public ShowSubjectSliderCard(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context);
     }
 
     private void init(Context context){
-       View v =  LayoutInflater.from(context).inflate(R.layout.card_point_show_subject,this);
+        View v =  LayoutInflater.from(context).inflate(R.layout.card_slider_show_subject,this);
     }
-
 }

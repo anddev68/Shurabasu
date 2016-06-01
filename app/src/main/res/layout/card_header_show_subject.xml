@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    ShowSubjectのヘッダー部分
+    残り点数を左に、円グラフを右に表示する
+-->
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" >
+
+    <!-- CardView に表示したいViewを配置 -->
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="16dp"
+        android:text="52"
+        android:textSize="120sp" />
+
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="right|center_vertical"
+        android:layout_marginRight="16dp"
+        android:max="500"
+        android:progress="200"
+        android:indeterminateDrawable="@drawable/progress" />
+
+</android.support.v7.widget.CardView>

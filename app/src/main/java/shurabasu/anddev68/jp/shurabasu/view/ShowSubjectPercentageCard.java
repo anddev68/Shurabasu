@@ -1,19 +1,18 @@
 package shurabasu.anddev68.jp.shurabasu.view;
 
 import android.content.Context;
+import android.support.v7.widget.CardView;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.Spinner;
 
 import shurabasu.anddev68.jp.shurabasu.R;
 
 /**
  * Created by kano on 2016/06/01.
  */
-public class ShowSubjectPercentageCard extends LinearLayout{
+public class ShowSubjectPercentageCard extends CardView {
 
     ProgressBar progressBar;
 
@@ -38,7 +37,7 @@ public class ShowSubjectPercentageCard extends LinearLayout{
     }
 
     private void init(Context context){
-        View v =  LayoutInflater.from(context).inflate(R.layout.card_spinner_show_subject,this);
+        View v =  LayoutInflater.from(context).inflate(R.layout.card_header_show_subject,this);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
     }
 
