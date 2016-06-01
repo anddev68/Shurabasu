@@ -5,12 +5,18 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.ProgressBar;
 
+import java.util.ArrayList;
+
+import shurabasu.anddev68.jp.shurabasu.model.Point;
+
 public class ShowSubjectActivity extends AppCompatActivity {
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,7 +34,15 @@ public class ShowSubjectActivity extends AppCompatActivity {
             }
         });
 
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        ArrayList<Point> points = new ArrayList<Point>();
+        points.add(new Point(50,100));
+        points.add(new Point(70,100));
+        points.add(new Point(40,100));
+        ShowSubjectAdapter showSubjectAdapter = new ShowSubjectAdapter(this,points);
+        recyclerView.setAdapter(showSubjectAdapter);
 
 
     }
+
 }
