@@ -5,14 +5,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 
 import shurabasu.anddev68.jp.shurabasu.model.Point;
-import shurabasu.anddev68.jp.shurabasu.view.ShowSubjectPercentageCard;
+import shurabasu.anddev68.jp.shurabasu.view.ShowSubjectHeaderCard;
 import shurabasu.anddev68.jp.shurabasu.view.ShowSubjectPointCard;
-import shurabasu.anddev68.jp.shurabasu.view.ShowSubjectSliderCard;
 
 /**
  * Created by kano on 2016/06/01.
@@ -23,9 +21,8 @@ public class ShowSubjectAdapter extends  RecyclerView.Adapter<ShowSubjectAdapter
     LayoutInflater mLayoutInflater;
     ArrayList<Point> mData;
 
-    final static int VIEW_PERCENTAGE = 0;
+    final static int VIEW_HEADER = 0;
     final static int VIEW_POINT = 1;
-    final static int VIEW_SLIDER = 2;
 
     public ShowSubjectAdapter(Context context, ArrayList<Point> data){
         super();
@@ -41,11 +38,9 @@ public class ShowSubjectAdapter extends  RecyclerView.Adapter<ShowSubjectAdapter
             case VIEW_POINT:
                 v = new ShowSubjectPointCard(parent.getContext());
                 break;
-            case VIEW_PERCENTAGE:
-                v =  new ShowSubjectPercentageCard(parent.getContext());
+            case VIEW_HEADER:
+                v =  new ShowSubjectHeaderCard(parent.getContext());
                 break;
-            case VIEW_SLIDER:
-                v = new ShowSubjectSliderCard(parent.getContext());
         }
         ViewHolder viewHolder = new ViewHolder(v);
         return viewHolder;
@@ -58,14 +53,9 @@ public class ShowSubjectAdapter extends  RecyclerView.Adapter<ShowSubjectAdapter
         switch(type){
             case VIEW_POINT:
                 break;
-            case VIEW_PERCENTAGE:
-                int max = Point.sumCurrent(mData);
-                int current = Point.sumMax(mData);
-                ShowSubjectPercentageCard view = (ShowSubjectPercentageCard) holder.itemView;
-                view.setPercentage(current,max);
+            case VIEW_HEADER:
                 break;
-            case VIEW_SLIDER:
-                break;
+
         }
     }
 
@@ -75,8 +65,8 @@ public class ShowSubjectAdapter extends  RecyclerView.Adapter<ShowSubjectAdapter
         /* 0番目は割合 */
         /* それ以外は点数 */
         switch(position){
-            case 0: return VIEW_PERCENTAGE;
-            case 1: return VIEW_SLIDER;
+            case 0: return VIEW_HEADER;
+            case 1: return VIEW_POINT;
         }
 
         return VIEW_POINT;
@@ -85,7 +75,7 @@ public class ShowSubjectAdapter extends  RecyclerView.Adapter<ShowSubjectAdapter
 
     @Override
     public int getItemCount() {
-        return mData.size() + 2;
+        return mData.size() + 1;
     }
 
 
