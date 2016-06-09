@@ -13,35 +13,26 @@ public class Subject {
     public int id;
     public String name;
     public String url; //  シラバスへのurl
-    public int gradeId;
-    public int departId;
-
-    SQLiteDatabase db;
-    Context context;
-
-    public Subject(SQLiteDatabase db,Context context){
-        this.db = db;
-        this.context = context;
-    }
+    public String className;
 
     /* デフォルトコンストラクタ */
-    public Subject(String name,String url,int grade,int departId){
-        this.id = -1;
+    public Subject(int id, String className, String name, String url){
+        this.id = id;
         this.name = name;
         this.url = url;
-        this.gradeId = grade;
-        this.departId = departId;
+        this.className = className;
     }
 
-    /* Databaseからcursorで初期化 */
-    public Subject(Cursor cursor){
-        this.id = cursor.getInt(0);
-        this.name = cursor.getString(1);
-        this.url = cursor.getString(2);
-        this.gradeId = cursor.getInt(3);
-        this.departId = cursor.getInt(4);
+    public static Subject find(String className,SQLiteDatabase db){
+        Cursor cursor = db.rawQuery(R.string.sqls.find_subject,className);
+        if(cursor==null) return null;
+        return new Subject(cursor.getInt(0), cursor.getString(1), cursor.getString(2), cursor.getString(3) );
     }
 
-
+    public static boolean save(String subject,SQLiteDatabase db){
+        db.beginTransaction();
+        db.execSQL();
+        db.endTransaction();
+    }
 
 }
