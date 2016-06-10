@@ -10,6 +10,7 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import shurabasu.anddev68.jp.shurabasu.model.Subject;
 
@@ -17,13 +18,13 @@ import shurabasu.anddev68.jp.shurabasu.model.Subject;
  * MainAdapter
  * MainActivityに表示する教科一覧になります
  */
-public class MainAdapter  extends  RecyclerView.Adapter<MainAdapter.ViewHolder> {
+public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
 
     Context mContext;
     LayoutInflater mLayoutInflater;
-    ArrayList<Subject> mData;
+    List<Subject> mData;
 
-    public MainAdapter(Context context, ArrayList<Subject> data){
+    public MainAdapter(Context context, List<Subject> data){
         super();
         mContext = context;
         mLayoutInflater = LayoutInflater.from(context);
@@ -43,7 +44,7 @@ public class MainAdapter  extends  RecyclerView.Adapter<MainAdapter.ViewHolder> 
     public void onBindViewHolder(ViewHolder holder, int position) {
         /* 値を代入したりする処理 */
         holder.textView.setText(mData.get(position).name);
-        holder.textView.setText("E");
+        holder.iconTextView.setText(mData.get(position).className);
 
     }
 

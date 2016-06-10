@@ -5,34 +5,39 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
+
 /**
  * Created by Administrator on 2016/05/30.
  */
+@DatabaseTable(tableName = "Subject")
 public class Subject {
 
-    public int id;
+    @DatabaseField(generatedId = true)
+    public Long id;
+    @DatabaseField
     public String name;
+    @DatabaseField
     public String url; //  シラバスへのurl
+    @DatabaseField
     public String className;
 
+    @SuppressWarnings("unused")
+    private Subject(){}
+
     /* デフォルトコンストラクタ */
-    public Subject(int id, String className, String name, String url){
+    public Subject(Long id, String className, String name, String url){
         this.id = id;
         this.name = name;
         this.url = url;
         this.className = className;
     }
 
-    public static Subject find(String className,SQLiteDatabase db){
-        Cursor cursor = db.rawQuery(R.string.sqls.find_subject,className);
-        if(cursor==null) return null;
-        return new Subject(cursor.getInt(0), cursor.getString(1), cursor.getString(2), cursor.getString(3) );
+    @Override
+    public String toString(){
+        return String.format("%3d,%s,%s,%s",id,className,name,url);
     }
 
-    public static boolean save(String subject,SQLiteDatabase db){
-        db.beginTransaction();
-        db.execSQL();
-        db.endTransaction();
-    }
 
 }

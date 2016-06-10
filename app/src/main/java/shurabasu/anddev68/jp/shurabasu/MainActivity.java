@@ -1,15 +1,32 @@
 package shurabasu.anddev68.jp.shurabasu;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.j256.ormlite.android.apptools.OpenHelperManager;
+import com.j256.ormlite.dao.RuntimeExceptionDao;
+import com.j256.ormlite.stmt.PreparedQuery;
+import com.j256.ormlite.stmt.QueryBuilder;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import shurabasu.anddev68.jp.shurabasu.model.MyDatabaseHelper;
+import shurabasu.anddev68.jp.shurabasu.model.Subject;
+
 public class MainActivity extends AppCompatActivity {
+
+    MyDatabaseHelper mDatabaseHelper;
+    RuntimeExceptionDao<Subject,Long> mSubjectDao;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +43,29 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+
+
+        mDatabaseHelper = OpenHelperManager.getHelper(this, MyDatabaseHelper.class);
+        mSubjectDao = mDatabaseHelper.getRuntimeExceptionDao(Subject.class);
+
+        if( mSubjectDao.idExists(1L) ){
+            //   is not first execution
+            initRecyclerAdapter();
+
+        }else{
+            //  first execution
+            //onFirstExecution();
+            Intent intent = new Intent(this,RegisterActivity.class);
+            intent.putExtra("first-execution",true);
+            startActivity(intent);
+            finish();
+        }
+    }
+
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
+        OpenHelperManager.releaseHelper();
     }
 
     @Override
@@ -49,4 +89,21 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+
+    private void initRecyclerAdapter(){
+        try {
+            RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+            QueryBuilder<Subject, Long> queryBuilder = mSubjectDao.queryBuilder();
+            PreparedQuery<Subject> preparedQuery = queryBuilder.prepare();
+            List<Subject> list = mSubjectDao.query(preparedQuery);
+            MainAdapter mainAdapter = new MainAdapter(this,list);
+            recyclerView.setLayoutManager(new LinearLayoutManager(this));
+            recyclerView.setAdapter(mainAdapter);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+
 }

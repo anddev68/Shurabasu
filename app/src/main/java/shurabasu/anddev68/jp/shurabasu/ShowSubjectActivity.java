@@ -41,13 +41,6 @@ public class ShowSubjectActivity extends AppCompatActivity {
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         ArrayList<Point> points = new ArrayList<Point>();
 
-        points.add(new Point(50,100));
-        points.add(new Point(70,100));
-
-        points.add(new Point(40,100));
-        points.add(new Point(40,100));
-        points.add(new Point(40,100));
-        points.add(new Point(40,100));
 
         ShowSubjectAdapter showSubjectAdapter = new ShowSubjectAdapter(this,points);
         GridLayoutManager layoutManager = new GridLayoutManager(getApplicationContext(),1);
