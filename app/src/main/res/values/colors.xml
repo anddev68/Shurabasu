@@ -3,4 +3,11 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+
+    <color name="base">#ffffff</color>
+    <color name="error">#FF4081</color>
+    <color name="highlight">#cccccc</color>
+    <color name="hint">#cccccc</color>
+    <color name="arrow">#FF4081</color>
+    <color name="floating_label">#cccccc</color>
 </resources>

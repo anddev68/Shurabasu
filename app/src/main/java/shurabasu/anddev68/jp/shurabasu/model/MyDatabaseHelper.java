@@ -13,7 +13,7 @@ import com.j256.ormlite.table.TableUtils;
 public class MyDatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     final static String DATABASE_NAME = "shurabasu.db";
-    final static int DATABASE_VERSION = 1;
+    final static int DATABASE_VERSION = 2;
 
     public MyDatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -25,6 +25,7 @@ public class MyDatabaseHelper extends OrmLiteSqliteOpenHelper {
         try {
             TableUtils.createTable(connectionSource, Point.class);
             TableUtils.createTable(connectionSource, Subject.class);
+            TableUtils.createTable(connectionSource, MyClass.class);
         } catch (java.sql.SQLException e) {
             e.printStackTrace();
         }
@@ -32,6 +33,11 @@ public class MyDatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase database, ConnectionSource connectionSource, int oldVersion, int newVersion) {
-
+        try {
+            if(oldVersion==1)
+                TableUtils.createTable(connectionSource, MyClass.class);
+        } catch (java.sql.SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

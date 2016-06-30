@@ -16,11 +16,11 @@ public class Subject {
 
     @DatabaseField(generatedId = true)
     public Long id;
-    @DatabaseField
+    @DatabaseField(uniqueCombo = true)
     public String name;
     @DatabaseField
     public String url; //  シラバスへのurl
-    @DatabaseField
+    @DatabaseField(uniqueCombo = true, columnName = "class_name")
     public String className;
 
     @SuppressWarnings("unused")

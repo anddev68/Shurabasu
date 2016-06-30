@@ -26,14 +26,14 @@
             android:layout_height="32dp"
             android:text=""
             android:gravity="center"
-            android:textSize="20sp"
+            android:textSize="16sp"
             android:textColor="#ffffff"
             android:id="@+id/iconText" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingTop="20dp"
+            android:gravity="center_vertical"
             android:paddingLeft="72dp"
             android:text="subject"
             android:textSize="16sp"

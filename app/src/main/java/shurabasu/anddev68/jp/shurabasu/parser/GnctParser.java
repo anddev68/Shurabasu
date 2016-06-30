@@ -2,6 +2,11 @@ package shurabasu.anddev68.jp.shurabasu.parser;
 
 import android.util.Log;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -22,6 +27,9 @@ public class GnctParser {
     String mClassName;
     String mUrl;
 
+    private final static String[] EXCLUDING_FROM_SUBJECTS = {"教育目標","科目構成図","科目構成図"};
+    //private final static Pattern PATTERN = Pattern.compile("[0-9]([0-9])[0-9]+[.]pdf");
+
     public GnctParser(String className, String url){
         mClassName = className;
         mUrl = url;
@@ -29,61 +37,138 @@ public class GnctParser {
 
 
     public ArrayList<Subject> parse() {
+        switch (mClassName){
+            case "C":
+                return parseC();
+            case "D":
+                return parseD();
+            default:
+                return parseM();
+        }
+
+    }
+
+
+    /**
+     * C科専用のパーサー
+     * C科はaタグ直にpdfリンクと科目名が入っている
+     * @return
+     */
+    private ArrayList<Subject> parseC(){
         ArrayList<Subject> subjects = new ArrayList<>();
         try {
-            URL url = new URL(mUrl);
-            InputStream is = url.openStream();
-            BufferedReader br = new BufferedReader(new InputStreamReader(is,"sjis"));
-            String line =  null;
-            CharSequence[] cs = {"１年","２年","３年","４年","５年"};
-            String[] cs2 = {"地理(","英語C(","政治経済(","英語A("};
-            int grade = 0;
+            Document document = Jsoup.connect(mUrl).get();
+            Elements elements = document.getElementsByTag("td");
 
-            Log.i("GnctParser","URL:"+mUrl);
-
-            while((line=br.readLine())!=null) {
-                //  学年別に読む処理
-                if( grade<cs.length) {
-                    if (line.contains(cs[grade])) grade++;
-                    if (grade == 0) continue;
-                }
-
-                Pattern pattern = Pattern.compile("<a.*?href=\"(.*?)\".*?>(.*?)</a>");
-                Matcher m = pattern.matcher(line);
-                while(m.find()){
-                    String abs_path = mUrl.substring(0,mUrl.lastIndexOf('/'))+"/";
-                    //String code = m.group(1).replaceAll("\\s", "").replace(".pdf","");  //  xxxxxx.pdfのxxxx部分をコードとする
-                    String href = abs_path + m.group(1).replaceAll("\\s", "");  //  URLは絶対パス
-                    String text = m.group(2).replaceAll("\\s", "");  // 科目名
-
-                    //  一般科の特殊なものを処理
-                    for(String str:cs2){
-                        if(line.contains(str)){
-                            text = str+text+")";
-                        }
+            for(Element elem : elements){
+                //  get A tag
+                Elements a_tag = elem.getElementsByTag("a");
+                //  parse A tag
+                String pdf_name = a_tag.attr("href");
+                String subject_name = a_tag.text();
+                //  教科名でないもの、から文字を除外する
+                boolean excluding = pdf_name.length()==0;
+                for(String exclude : EXCLUDING_FROM_SUBJECTS){
+                    if( subject_name.contains(exclude)){
+                        excluding = true;
                     }
-
-                    //Log.i("GnctParser",
-                    //    String.format("grade=%d href=%s text=%s",grade,href,text));
-                    //if(! _listener.onParsedLine(text,href,code,grade) ){
-                        //  終了処理を加える
-                    //}
-                    Subject subject = new Subject(1L,grade+mClassName,text,href);
-                    subjects.add(subject);
+                }
+                //  教科名と判断された場合のみ追加する
+                if(!excluding){
+                    int grade = pdf_name.charAt(1) - '0';
+                    String class_name = grade + mClassName;
+                    String url = mUrl.substring(0,mUrl.lastIndexOf('/'))+"/" + pdf_name; //  URLは絶対パス
+                    subjects.add(new Subject(1L,class_name,subject_name,url));
                 }
 
             }
-
-            br.close();
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        }catch(Exception e){
             e.printStackTrace();
         }
-
         return subjects;
     }
 
+    /**
+     * D科専用のパーサー
+     * B,C,Dを応用数学B,C,Dに置換
+     * @return
+     */
+    private ArrayList<Subject> parseD(){
+        ArrayList<Subject> subjects = new ArrayList<>();
+        try {
+            Document document = Jsoup.connect(mUrl).get();
+            Elements elements = document.getElementsByTag("td");
+
+            for(Element elem : elements){
+                //  get A tag
+                Elements a_tag = elem.getElementsByTag("a");
+                //  parse A tag
+                String pdf_name = a_tag.attr("href");
+                String subject_name =a_tag.text();
+
+                //  教科名でないもの、から文字を除外する
+                boolean excluding = pdf_name.length()==0;
+                for(String exclude : EXCLUDING_FROM_SUBJECTS){
+                    if( subject_name.contains(exclude)){
+                        excluding = true;
+                    }
+                }
+                //  教科名と判断された場合のみ追加する
+                if(!excluding){
+                    // B,C,D 置換処理
+                    subject_name = subject_name.replace("B","応用数学B");
+                    int grade = pdf_name.charAt(1) - '0';
+                    String class_name = grade + mClassName;
+                    String url = mUrl.substring(0,mUrl.lastIndexOf('/'))+"/" + pdf_name; //  URLは絶対パス
+                    subjects.add(new Subject(1L,class_name,subject_name,url));
+                }
+
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return subjects;
+    }
+
+
+    /**
+     * それ以外のパーサー
+     * @return
+     */
+    private ArrayList<Subject> parseM(){
+        ArrayList<Subject> subjects = new ArrayList<>();
+        try {
+            Document document = Jsoup.connect(mUrl).get();
+            Elements elements = document.getElementsByTag("td");
+
+            for(Element elem : elements){
+                //  get A tag
+                Elements a_tag = elem.getElementsByTag("a");
+                //  parse A tag
+                String pdf_name = a_tag.attr("href");
+                String subject_name =a_tag.text();
+
+                //  教科名でないもの、から文字を除外する
+                boolean excluding = pdf_name.length()==0;
+                for(String exclude : EXCLUDING_FROM_SUBJECTS){
+                    if( subject_name.contains(exclude)){
+                        excluding = true;
+                    }
+                }
+                //  教科名と判断された場合のみ追加する
+                if(!excluding){
+                    int grade = pdf_name.charAt(1) - '0';
+                    String class_name = grade + mClassName;
+                    String url = mUrl.substring(0,mUrl.lastIndexOf('/'))+"/" + pdf_name; //  URLは絶対パス
+                    subjects.add(new Subject(1L,class_name,subject_name,url));
+                }
+
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return subjects;
+    }
 
 
 
